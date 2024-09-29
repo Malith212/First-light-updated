@@ -1,9 +1,9 @@
 import Image from "next/image";
 import { UserButton } from "@clerk/nextjs";
-import { connectDB } from "<pages>/config/db";
+import { connectMongoDB  } from "<pages>/config/db";
 import { GetCurrentUserFromMongoDB } from "<pages>/server-actions/users";
 import { UserType } from "<pages>/interfaces";
-connectDB();
+connectMongoDB ();
 
 export default async function Home() {
   const response: any = await GetCurrentUserFromMongoDB();
