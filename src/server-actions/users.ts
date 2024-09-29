@@ -1,11 +1,11 @@
 "use server";
 
-import { connectDB } from "<pages>/config/db";
+import { connectMongoDB } from "<pages>/config/db";
 import UserModel from "<pages>/models/user-model";
 import { currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 
-connectDB();
+connectMongoDB();
 
 export const GetCurrentUserFromMongoDB = async () => {
   try {
