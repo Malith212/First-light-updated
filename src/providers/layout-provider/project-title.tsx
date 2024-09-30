@@ -1,8 +1,8 @@
 import React from 'react'
 
-const ProjectTitle = () => {
+function ProjectTitle(){
   return (
-    <div>ProjectTitle</div>
+    <div className="p-5 text-2xl font-bold border-0 border-r border-solid">First Light Villas</div>
   )
 }
  
