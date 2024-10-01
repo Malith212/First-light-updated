@@ -13,6 +13,7 @@ import {
 import { on } from "events";
 import { usePathname, useRouter } from "next/navigation";
 import item from "antd/es/list/Item";
+import { useAuth } from "@clerk/nextjs";
 
 function SideBar({
   showsSideBar,
@@ -26,6 +27,14 @@ function SideBar({
   const iconSize = 18;
   const router = useRouter();
   const pathname = usePathname();
+
+  const { signOut } = useAuth();
+
+  const onLogout = async () => {
+    await signOut();
+    setShowsSideBar(false);
+    router.push("/sign-in");
+  };
 
   const userMenueItems: any[] = [
     {
@@ -85,34 +94,34 @@ function SideBar({
     ? adminMenueItems
     : userMenueItems;
 
-    return (
-      <Drawer open={showsSideBar} onClose={() => setShowsSideBar(false)} closable>
-        <div className="flex flex-col gap-10">
-          {menuItemsToShow.map((item, index) => (
-            <div
-              className={`flex gap-4 items-center text-gray-700 cursor-pointer px-7 py-3 rounded ${
-                item.isActive ? "bg-gray-700 text-white" : ""
-              }`}
-              key={index}
-              onClick={() => {
-                item.onClick();
-                setShowsSideBar(false);
-              }}
-            >
-              {item.icon}
-              <span className="mt-[2px]">{item.name}</span>
-            </div>
-          ))}
-  
-          {/* <span
-            className="text-center cursor-pointer  text-red-500"
-            onClick={onLogout}
+  return (
+    <Drawer open={showsSideBar} onClose={() => setShowsSideBar(false)} closable>
+      <div className="flex flex-col gap-10">
+        {menuItemsToShow.map((item, index) => (
+          <div
+            className={`flex gap-4 items-center text-gray-700 cursor-pointer px-7 py-3 rounded ${
+              item.isActive ? "bg-gray-700 text-white" : ""
+            }`}
+            key={index}
+            onClick={() => {
+              item.onClick();
+              setShowsSideBar(false);
+            }}
           >
-            Logout
-          </span> */}
-        </div>
-      </Drawer>
-    );
-  }
+            {item.icon}
+            <span className="mt-[2px]">{item.name}</span>
+          </div>
+        ))}
+
+        <span
+          className="text-center cursor-pointer  text-red-500"
+          onClick={onLogout}
+        >
+          Logout
+        </span>
+      </div>
+    </Drawer>
+  );
+}
 
 export default SideBar;
