@@ -42,14 +42,15 @@ function LayoutProvider({ children }: { children: React.ReactNode }) {
     return children;
   }
 
-  if(loading){
-    return <Spinner fullHeight />
+  if (loading) {
+    return <Spinner fullHeight />;
   }
 
   return (
     <div>
       <Header loggedInUserData={loggedInUserData} />
-      {children}
+
+      <div className="px-5 lg:px-20 mt-5">{children}</div>
     </div>
   );
 }
