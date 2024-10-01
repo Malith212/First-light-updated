@@ -1,9 +1,18 @@
 import { Drawer } from "antd";
 import React from "react";
 import { UserType } from "<pages>/interfaces";
-import { BedDouble, GitGraph, Home, Hotel, Icon, List, User } from "lucide-react";
+import {
+  BedDouble,
+  GitGraph,
+  Home,
+  Hotel,
+  Icon,
+  List,
+  User,
+} from "lucide-react";
 import { on } from "events";
 import { useRouter } from "next/navigation";
+import Item from "antd/es/list/Item";
 
 function SideBar({
   showsSideBar,
@@ -14,7 +23,7 @@ function SideBar({
   setShowsSideBar: React.Dispatch<React.SetStateAction<boolean>>;
   loggedInUserData: UserType;
 }) {
-  const iconSize = 20;
+  const iconSize = 18;
   const router = useRouter();
 
   const userMenueItems: any[] = [
@@ -68,11 +77,25 @@ function SideBar({
     : userMenueItems;
 
   return (
-    <Drawer
-      open={showsSideBar}
-      onClose={() => setShowsSideBar(false)}
-      closable
-    ></Drawer>
+    <Drawer open={showsSideBar} onClose={() => setShowsSideBar(false)} closable>
+      <div className="flex flex-col gap-14 text-gray-700 cursor-pointer">
+        {menuItemsToShow.map((Item, index) => {
+          return (
+            <div
+              className="flex gap-4 items-center"
+              key={index}
+              onClick={() => {
+                Item.onClick();
+                setShowsSideBar(false);
+              }}
+            >
+              {Item.icon}
+              <span className="mt -[2px]">{Item.name}</span>
+            </div>
+          );
+        })}
+      </div>
+    </Drawer>
   );
 }
 
