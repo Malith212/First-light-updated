@@ -15,7 +15,7 @@ function Header({ loggedInUserData }: { loggedInUserData: UserType | null }) {
   }
 
   return (
-    <div className="px-20">
+    <div className="px-5 lg:px-20">
       <div className="flex justify-between items-center border border-t-0 border-solid">
         <ProjectTitle />
         <UserInfo loggedInUserData={loggedInUserData} />
