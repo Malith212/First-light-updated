@@ -13,11 +13,13 @@ function UserInfo({ loggedInUserData }: { loggedInUserData: UserType }) {
         onClick={() => setShowsSideBar(!showsSideBar)}
       />
 
-      {showsSideBar && <SideBar 
-      showsSideBar={showsSideBar}
-      setShowsSideBar={setShowsSideBar}
-      />}
-
+      {showsSideBar && (
+        <SideBar
+          showsSideBar={showsSideBar}
+          setShowsSideBar={setShowsSideBar}
+          loggedInUserData={loggedInUserData}
+        />
+      )}
     </div>
   );
 }
