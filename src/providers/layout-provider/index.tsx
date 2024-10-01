@@ -5,6 +5,7 @@ import { UserType } from "<pages>/interfaces";
 import { GetCurrentUserFromMongoDB } from "<pages>/server-actions/users";
 import { message } from "antd";
 import { usePathname } from "next/navigation";
+import Spinner from "<pages>/components/spinner";
 
 function LayoutProvider({ children }: { children: React.ReactNode }) {
   const [loggedInUserData, setLoggedInUserData] =
@@ -13,17 +14,21 @@ function LayoutProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isAuthRoute = pathname === "/sign-in" || pathname === "/sign-up";
 
+  const [loading, setLoading] = React.useState(true);
+
   const getUserData = async () => {
     try {
+      setLoading(true);
       const response = await GetCurrentUserFromMongoDB();
       if (response.success) {
         setLoggedInUserData(response.data);
-        console.log(response.data);
       } else {
         throw new Error(response.message);
       }
     } catch (error: any) {
       message.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -35,6 +40,10 @@ function LayoutProvider({ children }: { children: React.ReactNode }) {
 
   if (isAuthRoute) {
     return children;
+  }
+
+  if(loading){
+    return <Spinner fullHeight />
   }
 
   return (
