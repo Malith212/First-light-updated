@@ -74,7 +74,7 @@ function SideBar({
       name: "Villas",
       icon: <Hotel size={iconSize} />,
       onClick: () => router.push("/admin/villas"),
-      isActive: pathname === "/admin/villas",
+      isActive: pathname.includes("/admin/villas"),
     },
     {
       name: "Rooms",

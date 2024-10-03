@@ -50,7 +50,7 @@ function LayoutProvider({ children }: { children: React.ReactNode }) {
     <div>
       <Header loggedInUserData={loggedInUserData} />
 
-      <div className="px-5 lg:px-20 mt-5">{children}</div>
+      <div className="px-5 lg:px-20 mt-10">{children}</div>
     </div>
   );
 }
