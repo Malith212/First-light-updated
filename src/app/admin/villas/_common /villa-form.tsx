@@ -1,10 +1,31 @@
 "use client";
-import { Form, Input } from "antd";
-import React from "react";
+import { UploadImageToFirebaseAndReturnUrls } from "<pages>/helpers/image-upload";
+import { Button, Form, Input, message, Upload } from "antd";
+import { set } from "mongoose";
+import React, { useState } from "react";
 
 function VillaForm() {
+  const [uploadedFiles, setUploadedFiles] = useState([]) as any;
+  const [loading, setLoading] = useState(false);
+
+  const onFinish = async (values: any) => {
+    try {
+      setLoading(true);
+      values.media = await UploadImageToFirebaseAndReturnUrls(uploadedFiles);
+      console.log(values);
+    } catch (error: any) {
+      message.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <Form layout="vertical" className="grid grid-cols-3 mt-5 gap-5">
+    <Form
+      layout="vertical"
+      className="grid grid-cols-3 mt-5 gap-5"
+      onFinish={onFinish}
+    >
       <Form.Item
         className="col-span-3"
         label="Villa Name"
@@ -49,6 +70,26 @@ function VillaForm() {
       >
         <Input.TextArea placeholder="Address" />
       </Form.Item>
+
+      <div className="col-span-3">
+        <Upload
+          listType="picture-card"
+          beforeUpload={(file) => {
+            setUploadedFiles([...uploadedFiles, file]);
+            return false;
+          }}
+          multiple
+        >
+          <span className="text-xs text-gray-500 p-3">Upload Media</span>
+        </Upload>
+      </div>
+
+      <div className="col-span-3 flex justify-end gap-5">
+        <Button disabled={loading}>Cancel</Button>
+        <Button type="primary" htmlType="submit" loading={loading}>
+          Submit
+        </Button>
+      </div>
     </Form>
   );
 }
