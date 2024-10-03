@@ -3,16 +3,35 @@ import { UploadImageToFirebaseAndReturnUrls } from "<pages>/helpers/image-upload
 import { Button, Form, Input, message, Upload } from "antd";
 import { set } from "mongoose";
 import React, { useState } from "react";
+import { AddVila } from "<pages>/server-actions/villas";
+import { useRouter } from "next/navigation";
 
-function VillaForm() {
+function VillaForm({ type = "add" }: { type: string }) {
   const [uploadedFiles, setUploadedFiles] = useState([]) as any;
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const onFinish = async (values: any) => {
+    console.log("inside on finish");
+    
     try {
       setLoading(true);
       values.media = await UploadImageToFirebaseAndReturnUrls(uploadedFiles);
-      console.log(values);
+      console.log("Image uploaded,", values.media);
+      
+      let response: any = null;
+      if (type === "add") {
+        response = await AddVila(values);
+      }
+
+      if (response.success) {
+        message.success("Villa added successfully");
+        router.push("/admin/villas");
+      }
+
+      if (!response.success) {
+        message.error(response.error);
+      }
     } catch (error: any) {
       message.error(error.message);
     } finally {
