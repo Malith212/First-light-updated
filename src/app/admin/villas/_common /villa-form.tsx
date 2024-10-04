@@ -147,7 +147,7 @@ function VillaForm({
           Cancel
         </Button>
         <Button type="primary" htmlType="submit" loading={loading}>
-          Submit
+          {type === "add" ? "Add" : "Update"}
         </Button>
       </div>
     </Form>
