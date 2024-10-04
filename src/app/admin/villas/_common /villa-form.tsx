@@ -3,29 +3,40 @@ import { UploadImageToFirebaseAndReturnUrls } from "<pages>/helpers/image-upload
 import { Button, Form, Input, message, Upload } from "antd";
 import { set } from "mongoose";
 import React, { useState } from "react";
-import { AddVila } from "<pages>/server-actions/villas";
+import { AddVila, EditVilla } from "<pages>/server-actions/villas";
 import { useRouter } from "next/navigation";
 
-function VillaForm({ type = "add" }: { type: string }) {
+function VillaForm({
+  type = "add",
+  initialData,
+}: {
+  type: string;
+  initialData?: any;
+}) {
   const [uploadedFiles, setUploadedFiles] = useState([]) as any;
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const onFinish = async (values: any) => {
     console.log("inside on finish");
-    
+
     try {
       setLoading(true);
       values.media = await UploadImageToFirebaseAndReturnUrls(uploadedFiles);
       console.log("Image uploaded,", values.media);
-      
+
       let response: any = null;
       if (type === "add") {
         response = await AddVila(values);
+      } else {
+        response = await EditVilla({
+          villaId: initialData._id,
+          payload: values,
+        });
       }
 
       if (response.success) {
-        message.success("Villa added successfully");
+        message.success(response.message);
         router.push("/admin/villas");
       }
 
@@ -44,6 +55,7 @@ function VillaForm({ type = "add" }: { type: string }) {
       layout="vertical"
       className="grid grid-cols-3 mt-5 gap-5"
       onFinish={onFinish}
+      initialValues={initialData}
     >
       <Form.Item
         className="col-span-3"
@@ -104,7 +116,9 @@ function VillaForm({ type = "add" }: { type: string }) {
       </div>
 
       <div className="col-span-3 flex justify-end gap-5">
-        <Button disabled={loading}>Cancel</Button>
+        <Button disabled={loading} onClick={() => router.push("/admin/villas")}>
+          Cancel
+        </Button>
         <Button type="primary" htmlType="submit" loading={loading}>
           Submit
         </Button>

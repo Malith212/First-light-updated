@@ -32,3 +32,8 @@
 .ant-form-item-label{
   padding: 0px !important;
 }
+
+table{
+  margin-top: 20px;
+  border: 1px solid rgb(179, 178, 178);
+}
