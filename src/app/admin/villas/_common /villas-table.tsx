@@ -6,8 +6,11 @@ import { Delete, Edit, PlusSquare, Trash } from "lucide-react";
 import { render } from "react-dom";
 import { text } from "stream/consumers";
 import dayjs from "dayjs";
+import { useRouter } from "next/navigation";
 
 function VillasTable({ villas }: { villas: VillaType[] }) {
+  const router = useRouter();
+
   const columns = [
     { title: "Name", dataIndex: "name", key: "name" },
     { title: "Owner", dataIndex: "owner", key: "owner" },
@@ -27,7 +30,9 @@ function VillasTable({ villas }: { villas: VillaType[] }) {
       render: (text: any, record: VillaType) => (
         <div className="flex gap-5 items-center">
           <Trash size={18} className="cursor-pointer text-red-700" />
-          <Edit size={18} className="cursor-pointer text-yellow-700" />
+          <Edit size={18} className="cursor-pointer text-yellow-700" 
+            onClick={() => router.push(`/admin/villas/edit/${record._id}`)}
+          />
           <PlusSquare size={18} className="cursor-pointer text-green-700" />
         </div>
       ),
