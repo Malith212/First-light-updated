@@ -7,6 +7,7 @@ import { message } from "antd";
 
 connectMongoDB();
 
+//add Villas server actions
 export const AddVila = async (payload: any) => {
   try {
     const newVilla = new VillaModel(payload);
@@ -26,6 +27,7 @@ export const AddVila = async (payload: any) => {
   }
 };
 
+//edit Villas server actions
 export const EditVilla = async ({
   villaId,
   payload,
@@ -39,6 +41,23 @@ export const EditVilla = async ({
     return {
       success: true,
       message: "Villa updated successfully",
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      error: error.message,
+    };
+  }
+};
+
+//delete Villas server actions
+export const DeleteVilla = async (villaId: string) => {
+  try {
+    await VillaModel.findByIdAndDelete(villaId);
+    revalidatePath("/admin/villas");
+    return {
+      success: true,
+      message: "Villa deleted successfully",
     };
   } catch (error: any) {
     return {

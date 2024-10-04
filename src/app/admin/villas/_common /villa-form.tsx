@@ -13,7 +13,10 @@ function VillaForm({
   type: string;
   initialData?: any;
 }) {
-  const [uploadedFiles, setUploadedFiles] = useState([]) as any;
+  const [uploadedFiles, setUploadedFiles] = useState([]) as any[];
+  const [existingMedia = [], setExistingMedia] = useState(
+    initialData?.media || []
+  );
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -22,8 +25,9 @@ function VillaForm({
 
     try {
       setLoading(true);
-      values.media = await UploadImageToFirebaseAndReturnUrls(uploadedFiles);
-      console.log("Image uploaded,", values.media);
+      const newUrls = await UploadImageToFirebaseAndReturnUrls(uploadedFiles);
+      values.media = [...existingMedia, ...newUrls];
+      // console.log("Image uploaded,", values.media);
 
       let response: any = null;
       if (type === "add") {
@@ -102,7 +106,30 @@ function VillaForm({
         <Input.TextArea placeholder="Address" />
       </Form.Item>
 
-      <div className="col-span-3">
+      <div className="col-span-3 flex gap-5">
+        <div className="flex gap-5">
+          {existingMedia.map((media: any, index: number) => (
+            <div
+              className="flex flex-col border border-solid rounded p-3 border-gray-200 gap-5 items-center"
+              key={index}
+            >
+              <img src={media} alt="media" className="h-16 w-16 object-cover" />
+              <span
+                className="text-gray-500 underline text-sm cursor-pointer"
+                onClick={() => {
+                  setExistingMedia(
+                    existingMedia.filter(
+                      (item: String, i: number) => i !== index
+                    )
+                  );
+                }}
+              >
+                Remove
+              </span>
+            </div>
+          ))}
+        </div>
+
         <Upload
           listType="picture-card"
           beforeUpload={(file) => {
@@ -120,7 +147,7 @@ function VillaForm({
           Cancel
         </Button>
         <Button type="primary" htmlType="submit" loading={loading}>
-          Submit
+          {type === "add" ? "Add" : "Update"}
         </Button>
       </div>
     </Form>
