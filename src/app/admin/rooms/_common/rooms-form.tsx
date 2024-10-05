@@ -163,7 +163,7 @@ function RoomsForm({
         <Upload
           listType="picture-card"
           beforeUpload={(file) => {
-            setUploadedFiles([...uploadedFiles, file]);
+            setUploadedFiles((prev:any) => [...prev, file]);
             return false;
           }}
           multiple
@@ -173,7 +173,7 @@ function RoomsForm({
       </div>
 
       <div className="col-span-3 flex justify-end gap-5">
-        <Button disabled={loading} onClick={() => router.push("/admin/villas")}>
+        <Button disabled={loading} onClick={() => router.push("/admin/rooms")}>
           Cancel
         </Button>
         <Button type="primary" htmlType="submit" loading={loading}>
