@@ -21,3 +21,17 @@ export interface VillaType {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface RoomType {
+  _id: string;
+  name: string;
+  villa: VillaType;
+  rentPerDay: number;
+  type: string;
+  roomNumber: number;
+  beds: number;
+  amenities: string;
+  media: string[];
+  createdAt: string;
+  updatedAt: string;
+}

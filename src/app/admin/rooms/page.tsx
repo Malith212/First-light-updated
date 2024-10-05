@@ -1,17 +1,22 @@
+import LinkButton from "<pages>/components/link-button";
+import PageTitle from "<pages>/components/page-title";
+import RoomModel from "<pages>/models/room-model";
 import React from "react";
-import PageTitle from '<pages>/components/page-title'
-import LinkButton from '<pages>/components/link-button'
+import RoomsTable from "./_common/rooms-table";
 
-function RoomsPage() {
+async function RoomsPage() {
+  const response = await RoomModel.find()
+    // .populate("villa")
+    .sort({ createdAt: -1 });
+  const rooms = JSON.parse(JSON.stringify(response));
   return (
     <div>
       <div className="flex justify-between items-center">
         <PageTitle title="Rooms" />
-        <LinkButton title="Add Room" path="/admin/rooms/add" />
- 
+        <LinkButton path="/admin/rooms/add" title="Add Room" />
       </div>
 
-      {/* <VillasTable villas={villas} /> */}
+      <RoomsTable rooms={rooms} />
     </div>
   );
 }

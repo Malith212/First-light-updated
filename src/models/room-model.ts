@@ -30,7 +30,10 @@ const roomSchema = new mongoose.Schema(
     roomNumber: {
       type: Number,
       required: true,
-    },
+    },media: {
+      type: [String],
+      required: true,
+    }
   },
   { timestamps: true }
 );
