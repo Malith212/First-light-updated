@@ -3,10 +3,12 @@ import React from "react";
 import mongoose from "mongoose";
 import { RoomType } from "<pages>/interfaces";
 import Link from "next/link";
+import VillaModel from "<pages>/models/villa-model";
+
 
 async function RoomsData() {
   const response = await RoomModel.find()
-    .populate({ path: "villa", model: mongoose.model("villas") })
+    // .populate({ path: "villa", model: mongoose.model("villas") })
     .sort({ createdAt: -1 });
   const rooms = JSON.parse(JSON.stringify(response));
 
