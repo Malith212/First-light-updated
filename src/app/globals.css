@@ -5,12 +5,12 @@
 @tailwind utilities;
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Montserrat", sans-serif !important;
-    font-weight: 500;
-  }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif !important;
+  font-weight: 500;
+}
 
 .auth-container {
   background-color: black;
@@ -21,19 +21,32 @@
 }
 
 .cl-internal-y44tp9,
-.cl-internal-16vtwdp{
-    display: none !important;  
+.cl-internal-16vtwdp {
+  display: none !important;
 }
 
 .ant-form-item {
   margin-bottom: 0 !important;
 }
 
-.ant-form-item-label{
+.ant-form-item-label {
   padding: 0px !important;
 }
 
-table{
+table {
   margin-top: 20px;
   border: 1px solid rgb(179, 178, 178);
+}
+
+.room-card:hover img {
+  transform: scale(1.1);
+  transition: transform 0.5s;
+}
+
+.room-card img {
+  overflow: hidden;
+}
+
+.room-card {
+  overflow: hidden;
 }
