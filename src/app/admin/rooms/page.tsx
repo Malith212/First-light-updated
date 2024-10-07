@@ -8,7 +8,7 @@ import mongoose from "mongoose";
 
 async function RoomsPage() {
   const response = await RoomModel.find()
-    .populate({ path: "villa", model: mongoose.model("villas") })
+    // .populate({ path: "villa", model: mongoose.model("villas") })
     .sort({ createdAt: -1 });
   const rooms = JSON.parse(JSON.stringify(response));
   return (
