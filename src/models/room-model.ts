@@ -4,7 +4,7 @@ const roomSchema = new mongoose.Schema(
   {
     villa: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "villa",
+      ref: "villas",
       required: true,
     },
     name: {

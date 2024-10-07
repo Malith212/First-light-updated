@@ -1,4 +1,3 @@
-import { Phone } from "lucide-react";
 import mongoose from "mongoose";
 
 const villaSchema = new mongoose.Schema(

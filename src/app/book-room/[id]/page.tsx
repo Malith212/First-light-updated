@@ -13,7 +13,7 @@ async function BookRoomPage({
   };
 }) {
   const response = await RoomModel.findById(params.id)
-    // .populate({ path: "villa", model: mongoose.model("villas") });
+    .populate({ path: "villa", model: mongoose.model("villas") });
   const room: RoomType = JSON.parse(JSON.stringify(response));
   return (
     <div>
