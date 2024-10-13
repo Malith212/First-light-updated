@@ -31,6 +31,12 @@ export const CheckRoomAvailability = async ({
             $lte: reqCheckOutDate,
           },
         },
+        {
+          $and: [
+            {checkInDate: {$lte: reqCheckInDate}},
+            {checkOutDate: {$gte: reqCheckOutDate}}
+          ]
+        }
       ],
     });
 
