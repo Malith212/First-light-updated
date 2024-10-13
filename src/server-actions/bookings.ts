@@ -1,6 +1,8 @@
 "use server";
 import { connectMongoDB } from "<pages>/config/db";
 import BookingModel from "<pages>/models/booking-model";
+import { message } from "antd";
+import { GetCurrentUserFromMongoDB } from "./users";
 
 connectMongoDB();
 
@@ -29,6 +31,12 @@ export const CheckRoomAvailability = async ({
             $lte: reqCheckOutDate,
           },
         },
+        {
+          $and: [
+            {checkInDate: {$lte: reqCheckInDate}},
+            {checkOutDate: {$gte: reqCheckOutDate}}
+          ]
+        }
       ],
     });
 
@@ -45,6 +53,23 @@ export const CheckRoomAvailability = async ({
     return {
       success: false,
       error: error.message,
+    };
+  }
+};
+
+export const BookRoom = async (payload: any) => {
+  try {
+    const userResponse = await GetCurrentUserFromMongoDB();
+    payload.user = userResponse.data._id;
+    const booking = new BookingModel(payload);
+    await booking.save();
+    return {
+      success: true,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message,
     };
   }
 };

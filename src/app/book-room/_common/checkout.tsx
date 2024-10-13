@@ -8,6 +8,13 @@ import { CheckRoomAvailability } from "<pages>/server-actions/bookings";
 import { set } from "mongoose";
 import dayjs from "dayjs";
 import { GetStripeClientSecretKey } from "<pages>/server-actions/payments";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import PaymentModal from "./payment-modal";
+
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+);
 
 function CheckOut({ room }: { room: RoomType }) {
   const [chckIn, setChckIn] = useState("");
@@ -17,6 +24,7 @@ function CheckOut({ room }: { room: RoomType }) {
   const [totalDays, setTotalDays] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
   const [clientSecret, setClientSecret] = useState("");
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   const checkAvailibility = async () => {
     try {
@@ -47,14 +55,15 @@ function CheckOut({ room }: { room: RoomType }) {
       const response = await GetStripeClientSecretKey({
         amount: totalAmount,
       });
-      if(response.success) {
+      if (response.success) {
         setClientSecret(response.data);
-      }else{
+        setShowPaymentModal(true);
+      } else {
         message.error(response.message);
       }
     } catch (error: any) {
       message.error(error.message);
-    }finally{
+    } finally {
       setLoading(false);
     }
   };
@@ -118,6 +127,20 @@ function CheckOut({ room }: { room: RoomType }) {
           </>
         )}
       </Form>
+
+      {showPaymentModal && clientSecret && (
+        <Elements stripe={stripePromise} options={{ clientSecret }}>
+          <PaymentModal
+            room={room}
+            totalDays={totalDays}
+            totalAmount={totalAmount}
+            checkInDate={chckIn}
+            checkOutDate={chckOut}
+            showPaymentModal={showPaymentModal}
+            setShowPaymentModal={setShowPaymentModal}
+          />
+        </Elements>
+      )}
     </div>
   );
 }
