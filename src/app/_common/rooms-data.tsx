@@ -10,7 +10,7 @@ async function RoomsData() {
   const response = await RoomModel.find()
     //bug happens
     // .populate("villas")
-    // .populate({ path: "villa", model: mongoose.model("villas") })
+    .populate({ path: "villa", model: mongoose.model("villas") })
     .sort({ createdAt: -1 });
   const rooms = JSON.parse(JSON.stringify(response));
 

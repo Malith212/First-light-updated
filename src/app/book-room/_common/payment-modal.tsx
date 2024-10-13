@@ -2,6 +2,8 @@ import React from "react";
 import { RoomType } from "<pages>/interfaces";
 import { message, Modal, Button } from "antd";
 import { useState } from "react";
+import { BookRoom } from "<pages>/server-actions/bookings";
+import { useRouter } from "next/navigation";
 
 import {
   useStripe,
@@ -31,6 +33,7 @@ function PaymentModal({
   const [loading, setLoading] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
+  const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     try {
@@ -59,6 +62,20 @@ function PaymentModal({
         message.error(result.error.message);
       } else {
         message.success("Payment Successful");
+        const bookingPayload = {
+          villa: room.villa._id,
+          room: room._id,
+          checkInDate,
+          checkOutDate,
+          totalAmount,
+          totalDays,
+          paymentId: result.paymentIntent.id,
+        };
+
+        await BookRoom(bookingPayload);
+        message.success("Room Booked Successful");
+        setShowPaymentModal(false);
+        router.push("/user/bookings");
       }
     } catch (error: any) {
       message.error(error.message);
