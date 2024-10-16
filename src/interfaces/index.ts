@@ -35,3 +35,18 @@ export interface RoomType {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface BookingType {
+  _id: string;
+  user: UserType;
+  room: RoomType;
+  villa: VillaType;
+  checkInDate: string;
+  checkOutDate: string;
+  totalDays: number;
+  totalCost: number;
+  createdAt: string;
+  updatedAt: string;
+  paymentId: string;
+  bookingStatus: "Booked" | "Cancelled";
+}
