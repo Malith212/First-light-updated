@@ -10,7 +10,7 @@ async function BookingsPage() {
   const userResponse = await GetCurrentUserFromMongoDB();
   const userBookingResponse = await BookingModel.find({user: userResponse.data._id})
   .populate({ path: "room", model: mongoose.model("rooms") })
-  .populate({ path: "user", model: mongoose.model("users") })
+  .populate({ path: "villa", model: mongoose.model("villas") })
   .sort({ createdAt: -1 });  
   ;
   const userBookings = JSON.parse(JSON.stringify(userBookingResponse));``

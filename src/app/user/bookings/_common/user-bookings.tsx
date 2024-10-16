@@ -4,9 +4,18 @@ import { Button, Table } from "antd";
 import dayjs from "dayjs";
 import { title } from "process";
 import React, { use } from "react";
+import { useState } from "react";
+import CancelBookingModal from "./cancel-booking-modal";
 
 function UserBookingsTable({ bookings }: { bookings: BookingType[] }) {
-  const onCancel = async (bookingId: string) => {};
+  const [showCancelBookingModal, setShowCancelBookingModal] = useState(false);
+  const [selectedBooking, setSelectedBooking] =
+    React.useState<BookingType | null>(null);
+
+  const onCancel = async (booking: BookingType) => {
+    setSelectedBooking(booking);
+    setShowCancelBookingModal(true);
+  };
 
   const columns = [
     {
@@ -55,16 +64,25 @@ function UserBookingsTable({ bookings }: { bookings: BookingType[] }) {
       render: (text: String, record: BookingType) => (
         <span
           className="text-red-500 cursor-pointer text-sm"
-          onClick={() => onCancel(record._id)}
+          onClick={() => onCancel(record)}
         >
           Cancel
         </span>
       ),
     },
   ];
+
   return (
     <div>
       <Table columns={columns} dataSource={bookings} />
+
+      {showCancelBookingModal && selectedBooking && (
+        <CancelBookingModal
+          showCancelBookingModal={showCancelBookingModal}
+          setShowCancelBookingModal={setShowCancelBookingModal}
+          booking={selectedBooking}
+        />
+      )}
     </div>
   );
 }
