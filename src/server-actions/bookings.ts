@@ -3,6 +3,9 @@ import { connectMongoDB } from "<pages>/config/db";
 import BookingModel from "<pages>/models/booking-model";
 import { message } from "antd";
 import { GetCurrentUserFromMongoDB } from "./users";
+import { revalidatePath } from "next/cache";
+
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 connectMongoDB();
 
@@ -18,6 +21,7 @@ export const CheckRoomAvailability = async ({
   try {
     const bookedSlot = await BookingModel.findOne({
       room: roomId,
+      bookingStatus: "Booked",
       $or: [
         {
           checkInDate: {
@@ -33,10 +37,10 @@ export const CheckRoomAvailability = async ({
         },
         {
           $and: [
-            {checkInDate: {$lte: reqCheckInDate}},
-            {checkOutDate: {$gte: reqCheckOutDate}}
-          ]
-        }
+            { checkInDate: { $lte: reqCheckInDate } },
+            { checkOutDate: { $gte: reqCheckOutDate } },
+          ],
+        },
       ],
     });
 
@@ -65,6 +69,49 @@ export const BookRoom = async (payload: any) => {
     await booking.save();
     return {
       success: true,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const CancelBooking = async ({
+  bookingId,
+  paymentId,
+}: {
+  bookingId: string;
+  paymentId: string;
+}) => {
+  try {
+    //change the status of the booking to cancelled
+
+    await BookingModel.findByIdAndUpdate(bookingId, {
+      bookingStatus: "Cancelled",
+    });
+
+    //refund the payment
+
+    const refunded = await stripe.refunds.create({
+      payment_intent: paymentId,
+    });
+
+    if (refunded.status !== "succeeded") {
+      return {
+        success: false,
+        message:
+          "Your booking has been cancelled but the refund failed. Please try again later",
+      };
+    }
+
+    revalidatePath("/user/bookings");
+
+    return {
+      success: true,
+      message:
+        "Your booking has been cancelled successfully and the refund has been processed",
     };
   } catch (error: any) {
     return {

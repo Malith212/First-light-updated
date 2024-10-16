@@ -48,4 +48,5 @@ export interface BookingType {
   createdAt: string;
   updatedAt: string;
   paymentId: string;
+  bookingStatus: "Booked" | "Cancelled";
 }

@@ -58,17 +58,23 @@ function UserBookingsTable({ bookings }: { bookings: BookingType[] }) {
         dayjs(record.createdAt).format("DD-MM-YYYY, h:mm A"),
     },
     {
+      title: "Status",
+      dataIndex: "bookingStatus",
+      key: "status",
+    },
+    {
       title: "Action",
       dataIndex: "action",
       key: "action",
-      render: (text: String, record: BookingType) => (
-        <span
-          className="text-red-500 cursor-pointer text-sm"
-          onClick={() => onCancel(record)}
-        >
-          Cancel
-        </span>
-      ),
+      render: (text: String, record: BookingType) =>
+        record.bookingStatus === "Booked" && (
+          <span
+            className="text-red-500 cursor-pointer text-sm"
+            onClick={() => onCancel(record)}
+          >
+            Cancel
+          </span>
+        ),
     },
   ];
 
