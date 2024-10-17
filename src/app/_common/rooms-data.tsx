@@ -5,8 +5,7 @@ import { RoomType } from "<pages>/interfaces";
 import Link from "next/link";
 import VillaModel from "<pages>/models/villa-model";
 
-
-async function RoomsData() {
+async function RoomsData({ searchParams }: { searchParams: any }) {
   const response = await RoomModel.find()
     //bug happens
     // .populate("villas")
