@@ -4,6 +4,7 @@ import BookingModel from "<pages>/models/booking-model";
 import { message } from "antd";
 import { GetCurrentUserFromMongoDB } from "./users";
 import { revalidatePath } from "next/cache";
+import RoomModel from "<pages>/models/room-model";
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
@@ -113,6 +114,72 @@ export const CancelBooking = async ({
       success: true,
       message:
         "Your booking has been cancelled successfully and the refund has been processed",
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+};
+
+export const GetAvailableRooms = async ({
+  reqCheckInDate,
+  reqCheckOutDate,
+  type,
+}: {
+  reqCheckInDate: string;
+  reqCheckOutDate: string;
+  type: string;
+}) => {
+  try {
+    //if checkin data or checkout date is invalid return data with only type filter
+    if (!reqCheckInDate || !reqCheckOutDate) {
+      const rooms = await RoomModel.find({
+        ...(type && { type }),
+      });
+      return {
+        success: true,
+        data: JSON.parse(JSON.stringify(rooms)),
+      };
+    }
+
+    //Fist get all the rooms which are booked in the given date range
+    const bookedSlots = await BookingModel.find({
+      bookingStatus: "Booked",
+      $or: [
+        {
+          checkInDate: {
+            $gte: reqCheckInDate,
+            $lte: reqCheckOutDate,
+          },
+        },
+        {
+          checkOutDate: {
+            $gte: reqCheckInDate,
+            $lte: reqCheckOutDate,
+          },
+        },
+        {
+          $and: [
+            { checkInDate: { $lte: reqCheckInDate } },
+            { checkOutDate: { $gte: reqCheckOutDate } },
+          ],
+        },
+      ],
+    });
+
+    const bookedRoomIds = bookedSlots.map((slot) => slot.room);
+
+    //get all the rooms by excluding the rooms which are booked in the given date range
+    const rooms = await RoomModel.find({
+      _id: { $nin: bookedRoomIds },
+      ...(type && { type }),
+    });
+
+    return {
+      success: true,
+      data: JSON.parse(JSON.stringify(rooms)),
     };
   } catch (error: any) {
     return {
