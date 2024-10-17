@@ -4,14 +4,16 @@ import mongoose from "mongoose";
 import { RoomType } from "<pages>/interfaces";
 import Link from "next/link";
 import VillaModel from "<pages>/models/villa-model";
+import { GetAvailableRooms } from "<pages>/server-actions/bookings";
 
 async function RoomsData({ searchParams }: { searchParams: any }) {
-  const response = await RoomModel.find()
-    //bug happens
-    // .populate("villas")
-    .populate({ path: "villa", model: mongoose.model("villas") })
-    .sort({ createdAt: -1 });
-  const rooms = JSON.parse(JSON.stringify(response));
+  const response = await GetAvailableRooms({
+    reqCheckInDate: searchParams.checkInDate || "",
+    reqCheckOutDate: searchParams.checkOutDate || "",
+    type: searchParams.type || "",
+  });
+
+  const rooms: RoomType[] = response.data;
 
   if (rooms.length === 0) {
     return <div>No rooms found</div>;
