@@ -8,8 +8,8 @@ import { GetAvailableRooms } from "<pages>/server-actions/bookings";
 
 async function RoomsData({ searchParams }: { searchParams: any }) {
   const response = await GetAvailableRooms({
-    reqCheckInDate: searchParams.checkInDate || "",
-    reqCheckOutDate: searchParams.checkOutDate || "",
+    reqCheckInDate: searchParams.checkIn || "",
+    reqCheckOutDate: searchParams.checkOut || "",
     type: searchParams.type || "",
   });
 
