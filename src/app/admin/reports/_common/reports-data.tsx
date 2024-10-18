@@ -1,13 +1,14 @@
 import BookingModel from "<pages>/models/booking-model";
 import React from "react";
 import AdminBookingsTable from "../../_common/admin-bookings-table";
+import dayjs from "dayjs";
 
 async function ReportsData({ searchParams }: { searchParams: any }) {
   const response = await BookingModel.find({
     bookingStatus: "Booked",
     createdAt: {
-      $gte: searchParams.startDate,
-      $lte: searchParams.endDate,
+      $gte: dayjs(searchParams.startDate).startOf("day").toDate(),
+      $lte: dayjs(searchParams.endDate).endOf("day").toDate(),
     },
   }).populate("room").populate("user").populate("villa").sort({ createdAt: -1 });
   const bookings = JSON.parse(JSON.stringify(response));
