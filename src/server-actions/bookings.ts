@@ -137,7 +137,7 @@ export const GetAvailableRooms = async ({
     if (!reqCheckInDate || !reqCheckOutDate) {
       const rooms = await RoomModel.find({
         ...(type && { type }),
-      });
+      }).populate("villa");
       return {
         success: true,
         data: JSON.parse(JSON.stringify(rooms)),
@@ -175,7 +175,7 @@ export const GetAvailableRooms = async ({
     const rooms = await RoomModel.find({
       _id: { $nin: bookedRoomIds },
       ...(type && { type }),
-    });
+    }).populate("villa");
 
     return {
       success: true,
