@@ -47,3 +47,28 @@ export const GetCurrentUserFromMongoDB = async () => {
     };
   }
 };
+
+export const UpdateUserRole = async (userId: string, isAdmin: boolean) => {
+  try {
+    const user = await UserModel.findById(userId);
+    if (!user) {
+      return {
+        success: false,
+        message: "User not found",
+      };
+    }
+    user.isAdmin = isAdmin;
+    await user.save();
+    revalidatePath("/admin/users");
+    return {
+      success: true,
+      message: "User role updated successfully",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error,
+      message: "Error while updating user role",
+    };
+  }
+}

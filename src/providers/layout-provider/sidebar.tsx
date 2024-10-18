@@ -9,6 +9,7 @@ import {
   Icon,
   List,
   User,
+  User2,
 } from "lucide-react";
 import { on } from "events";
 import { usePathname, useRouter } from "next/navigation";
@@ -81,6 +82,12 @@ function SideBar({
       icon: <BedDouble size={iconSize} />,
       onClick: () => router.push("/admin/rooms"),
       isActive: pathname.includes("/admin/rooms"),
+    },
+    {
+      name: "Users",
+      icon: <User2 size={iconSize} />,
+      onClick: () => router.push("/admin/users"),
+      isActive: pathname.includes("/admin/users"),
     },
     {
       name: "Reports",
