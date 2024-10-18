@@ -54,6 +54,11 @@ function AdminBookingsTable({ bookings }: { bookings: BookingType[] }) {
         dayjs(record.createdAt).format("DD-MM-YYYY, h:mm A"),
     },
     {
+      title: "Total Amount",
+      dataIndex: "totalAmount",
+      key: "totalAmount",
+    },
+    {
       title: "Status",
       dataIndex: "bookingStatus",
       key: "status",
