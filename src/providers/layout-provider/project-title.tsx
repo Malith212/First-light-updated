@@ -5,10 +5,10 @@ function ProjectTitle() {
   const router = useRouter();
   return (
     <div
-      className="p-5 text-2xl font-bold border-0 border-r border-solid cursor-pointer"
+      className="p-5 text-2xl font-bold cursor-pointer"
       onClick={() => router.push("/")}
     >
-      First Light Villas
+      <span color="from-gray-500 to-gray-500">First Light Villas</span>
     </div>
   );
 }
