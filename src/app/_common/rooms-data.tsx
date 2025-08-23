@@ -1,21 +1,23 @@
-import RoomModel from "<pages>/models/room-model";
 import React from "react";
-import mongoose from "mongoose";
-import { RoomType } from "<pages>/interfaces";
 import Link from "next/link";
-import VillaModel from "<pages>/models/villa-model";
+import { RoomType } from "<pages>/interfaces";
 import { GetAvailableRooms } from "<pages>/server-actions/bookings";
+import VillaModel from "<pages>/models/villa-model"; // just to trigger villa query
 
 async function RoomsData({ searchParams }: { searchParams: any }) {
+  // 🔹 Call villas to warm up DB (not used in UI)
+  await VillaModel.find({}).lean();
+
+  // 🔹 Get rooms based on filters
   const response = await GetAvailableRooms({
     reqCheckInDate: searchParams.checkIn || "",
     reqCheckOutDate: searchParams.checkOut || "",
     type: searchParams.type || "",
   });
 
-  const rooms: RoomType[] = response.data;
+  const rooms: RoomType[] = response?.data || [];
 
-  if (rooms.length === 0) {
+  if (!rooms || rooms.length === 0) {
     return <div>No rooms found</div>;
   }
 
@@ -27,8 +29,8 @@ async function RoomsData({ searchParams }: { searchParams: any }) {
           key={room._id}
           className="no-underline text-black"
         >
-          <div className="flex flex-col gap-2 boarder border-gray-200 border-solid room-card">
-            <img src={room.media[0]} className="w-full h-64  object-cover" />
+          <div className="flex flex-col gap-2 border border-gray-200 border-solid room-card">
+            <img src={room.media[0]} className="w-full h-64 object-cover" />
 
             <div className="px-3 py-2 flex flex-col text-sm gap-2">
               <span>{room.name}</span>
@@ -38,7 +40,7 @@ async function RoomsData({ searchParams }: { searchParams: any }) {
 
               <hr className="border-gray-200 border border-solid" />
               <div className="flex justify-between">
-                <span>Rs{room.rentPerDay} / Per day</span>
+                <span>Rs {room.rentPerDay} / Per day</span>
               </div>
             </div>
           </div>
