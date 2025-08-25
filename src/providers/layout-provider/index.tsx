@@ -13,7 +13,6 @@ function LayoutProvider({ children }: { children: React.ReactNode }) {
 
   const pathname = usePathname();
   const isAuthRoute = pathname === "/sign-in" || pathname === "/sign-up";
-
   const isAdminRoute = pathname.includes("/admin");
 
   const [loading, setLoading] = React.useState(true);
@@ -46,9 +45,9 @@ function LayoutProvider({ children }: { children: React.ReactNode }) {
 
   if (loggedInUserData && isAdminRoute && !loggedInUserData.isAdmin) {
     return (
-      <div>
+      <div className="min-h-screen bg-gradient-to-r from-gray-900 to-gray-800 text-white">
         <Header loggedInUserData={loggedInUserData} />
-        <div className="text-center text-gray-500 pt-10 text-sm px-5 lg:px-20 ">
+        <div className="text-center text-gray-400 pt-10 text-sm px-5 lg:px-20">
           You are not authorized to access this page
         </div>
       </div>
@@ -60,9 +59,8 @@ function LayoutProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div>
+    <div className="min-h-screen bg-gradient-to-r from-gray-900 to-gray-800 text-white">
       <Header loggedInUserData={loggedInUserData} />
-
       <div className="px-5 lg:px-20 mt-10">{children}</div>
     </div>
   );
