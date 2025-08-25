@@ -55,7 +55,7 @@ function VillasTable({ villas }: { villas: VillaType[] }) {
             className="cursor-pointer text-yellow-700"
             onClick={() => router.push(`/admin/villas/edit/${record._id}`)}
           />
-          <PlusSquare size={18} className="cursor-pointer text-green-700" />
+          {/* <PlusSquare size={18} className="cursor-pointer text-green-700" /> */}
         </div>
       ),
     },
