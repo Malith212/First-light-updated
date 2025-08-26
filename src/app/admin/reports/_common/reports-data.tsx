@@ -2,7 +2,11 @@ import BookingModel from "<pages>/models/booking-model";
 import React from "react";
 import AdminBookingsTable from "../../_common/admin-bookings-table";
 import dayjs from "dayjs";
-import ReportsInsights from "./ReportsInsights"
+import ReportsInsights from "./ReportsInsights";
+import CustomerInsights from "./CustomerInsights";
+import BookingInsights from "./BookingInsights";
+import TimeBasedReports from "./TimeBasedReports";
+import OperationalReports from "./OperationalReports";
 
 async function ReportsData({ searchParams }: { searchParams: any }) {
   const response = await BookingModel.find({
@@ -64,6 +68,11 @@ async function ReportsData({ searchParams }: { searchParams: any }) {
 
       {/* Detailed Bookings Table */}
       <AdminBookingsTable bookings={bookings} />
+
+      <CustomerInsights bookings={bookings} />
+      <BookingInsights bookings={bookings} />
+      <TimeBasedReports bookings={bookings} />
+      <OperationalReports bookings={bookings} />
     </div>
   );
 }
