@@ -3,9 +3,7 @@ import React, { useEffect } from "react";
 import { RoomType } from "<pages>/interfaces";
 import { Button, Form, Input, message } from "antd";
 import { useState } from "react";
-import { Check } from "lucide-react";
 import { CheckRoomAvailability } from "<pages>/server-actions/bookings";
-import { set } from "mongoose";
 import dayjs from "dayjs";
 import { GetStripeClientSecretKey } from "<pages>/server-actions/payments";
 import { Elements } from "@stripe/react-stripe-js";
@@ -73,30 +71,32 @@ function CheckOut({ room }: { room: RoomType }) {
   }, [chckIn, chckOut]);
 
   return (
-    <div className="p-5 border border-gray-300 border-solid">
-      <Form className="flex flex-col gap-5 text-gray-500" layout="vertical">
-        <Form.Item label="Check In">
+    <div className="p-5 border border-gray-600 border-solid rounded-lg bg-gray-800">
+      <Form className="flex flex-col gap-5" layout="vertical">
+        <Form.Item label={<span className="text-gray-300">Check In</span>}>
           <Input
             type="date"
             onChange={(e) => setChckIn(e.target.value)}
             value={chckIn}
             min={dayjs().format("YYYY-MM-DD")}
+            className="placeholder-gray-400 bg-gray-700 border-gray-600 text-white"
           />
         </Form.Item>
 
-        <Form.Item label="Check Out">
+        <Form.Item label={<span className="text-gray-300">Check Out</span>}>
           <Input
             type="date"
             onChange={(e) => setChckOut(e.target.value)}
             value={chckOut}
             min={dayjs(chckIn).add(1, "day").format("YYYY-MM-DD")}
             disabled={!chckIn}
+            className="placeholder-gray-400 bg-gray-700 border-gray-600 text-white"
           />
         </Form.Item>
 
         <Button
           type="primary"
-          className="w-full"
+          className="w-full bg-gradient-to-r from-purple-600 to-blue-500 border-none hover:from-purple-700 hover:to-blue-600"
           disabled={!chckIn || !chckOut || isAvailable}
           loading={loading}
           onClick={checkAvailibility}
@@ -106,19 +106,19 @@ function CheckOut({ room }: { room: RoomType }) {
 
         {isAvailable && (
           <>
-            <div className="flex justify-between">
+            <div className="flex justify-between text-gray-300">
               <span>Total Days</span>
-              <span>{totalDays}</span>
+              <span className="font-semibold">{totalDays}</span>
             </div>
 
-            <div className="flex justify-between">
+            <div className="flex justify-between text-gray-300">
               <span>Total Amount</span>
-              <span>LKR {totalAmount}</span>
+              <span className="font-semibold">LKR {totalAmount}</span>
             </div>
 
             <Button
               type="primary"
-              className="w-full"
+              className="w-full bg-gradient-to-r from-purple-600 to-blue-500 border-none hover:from-purple-700 hover:to-blue-600"
               loading={loading}
               onClick={onBookRoom}
             >

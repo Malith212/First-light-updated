@@ -1,7 +1,6 @@
 "use client";
 import { UploadImageToFirebaseAndReturnUrls } from "<pages>/helpers/image-upload";
 import { Button, Form, Input, message, Select, Upload } from "antd";
-import { set } from "mongoose";
 import React, { useState } from "react";
 import { AddRoom, EditRoom } from "<pages>/server-actions/rooms";
 import { useRouter } from "next/navigation";
@@ -24,13 +23,10 @@ function RoomsForm({
   const router = useRouter();
 
   const onFinish = async (values: any) => {
-    console.log("inside on finish");
-
     try {
       setLoading(true);
       const newUrls = await UploadImageToFirebaseAndReturnUrls(uploadedFiles);
       values.media = [...existingMedia, ...newUrls];
-      // console.log("Image uploaded,", values.media);
 
       let response: any = null;
       if (type === "add") {
@@ -56,6 +52,7 @@ function RoomsForm({
       setLoading(false);
     }
   };
+
   return (
     <Form
       layout="vertical"
@@ -64,11 +61,14 @@ function RoomsForm({
       initialValues={initialData}
     >
       <Form.Item
-        label="Villa"
+        label={<span className="text-gray-300">Villa</span>}
         name="villa"
         rules={[{ required: true, message: "Please select a Villa" }]}
       >
-        <Select>
+        <Select
+          placeholder="Select a Villa"
+          className="placeholder-gray-100"
+        >
           {villas.map((villa) => (
             <Select.Option key={villa._id} value={villa._id}>
               {villa.name}
@@ -78,27 +78,39 @@ function RoomsForm({
       </Form.Item>
 
       <Form.Item
-        label="Name"
+        label={<span className="text-gray-300">Room View</span>}
         name="name"
-        rules={[{ required: true, message: "Name is Required" }]}
+        rules={[{ required: true, message: "Room View is Required" }]}
       >
-        <Input />
+        <Select
+          placeholder="Select Room View"
+          className="placeholder-gray-400"
+        >
+          <Select.Option value="ocean-vista">Ocean Vista</Select.Option>
+          <Select.Option value="mountain-panorama">Mountain Panorama</Select.Option>
+          <Select.Option value="pool-view">Pool View</Select.Option>
+          <Select.Option value="garden-view">Garden View</Select.Option>
+          <Select.Option value="city-view">City View</Select.Option>
+        </Select>
       </Form.Item>
 
       <Form.Item
-        label="Room Number"
+        label={<span className="text-gray-300">Room Number</span>}
         name="roomNumber"
         rules={[{ required: true, message: "Room Number is Required" }]}
       >
-        <Input />
+        <Input
+          placeholder="Enter Room Number"
+          className="placeholder-gray-400"
+        />
       </Form.Item>
 
       <Form.Item
-        label="Type"
+        label={<span className="text-gray-300">Type</span>}
         name="type"
         rules={[{ required: true, message: "Type is Required" }]}
       >
-        <Select>
+        <Select placeholder="Select Type" className="placeholder-gray-400">
           <Select.Option key="delux" value="delux">
             Delux
           </Select.Option>
@@ -106,46 +118,55 @@ function RoomsForm({
             Premium
           </Select.Option>
           <Select.Option key="standard" value="standard">
-            standard
+            Standard
           </Select.Option>
         </Select>
       </Form.Item>
 
       <Form.Item
-        label="Beds"
+        label={<span className="text-gray-300">Beds</span>}
         name="beds"
-        rules={[{ required: true, message: "Bedds Number is Required" }]}
+        rules={[{ required: true, message: "Beds Number is Required" }]}
       >
-        <Input />
+        <Input
+          placeholder="Enter Number of Beds"
+          className="placeholder-gray-400"
+        />
       </Form.Item>
 
       <Form.Item
-        label="Rent Per Day"
+        label={<span className="text-gray-300">Rent Per Day</span>}
         name="rentPerDay"
         rules={[{ required: true, message: "Rent Per Day is Required" }]}
       >
-        <Input />
+        <Input
+          placeholder="Enter Rent Per Day"
+          className="placeholder-gray-400"
+        />
       </Form.Item>
 
       <Form.Item
-        label="Amenities"
+        label={<span className="text-gray-300">Amenities</span>}
         name="amenities"
         rules={[{ required: true, message: "Amenities is Required" }]}
         className="col-span-3"
       >
-        <Input.TextArea/>
+        <Input.TextArea
+          placeholder="List the amenities for this room"
+          className="placeholder-gray-400"
+        />
       </Form.Item>
 
       <div className="col-span-3 flex gap-5">
         <div className="flex gap-5">
           {existingMedia.map((media: any, index: number) => (
             <div
-              className="flex flex-col border border-solid rounded p-3 border-gray-200 gap-5 items-center"
+              className="flex flex-col border border-solid rounded p-3 border-gray-600 gap-5 items-center bg-gray-750"
               key={index}
             >
               <img src={media} alt="media" className="h-16 w-16 object-cover" />
               <span
-                className="text-gray-500 underline text-sm cursor-pointer"
+                className="text-red-400 underline text-sm cursor-pointer hover:text-red-300"
                 onClick={() => {
                   setExistingMedia(
                     existingMedia.filter(
@@ -163,20 +184,29 @@ function RoomsForm({
         <Upload
           listType="picture-card"
           beforeUpload={(file) => {
-            setUploadedFiles((prev:any) => [...prev, file]);
+            setUploadedFiles((prev: any) => [...prev, file]);
             return false;
           }}
           multiple
         >
-          <span className="text-xs text-gray-500 p-3">Upload Media</span>
+          <span className="text-gray-400">Upload Media</span>
         </Upload>
       </div>
 
       <div className="col-span-3 flex justify-end gap-5">
-        <Button disabled={loading} onClick={() => router.push("/admin/rooms")}>
+        <Button
+          disabled={loading}
+          onClick={() => router.push("/admin/rooms")}
+          // className="border-gray-600 text-gray-300 hover:bg-gray-700"
+        >
           Cancel
         </Button>
-        <Button type="primary" htmlType="submit" loading={loading}>
+        <Button
+          type="primary"
+          htmlType="submit"
+          loading={loading}
+          // className="bg-gradient-to-r from-purple-600 to-blue-500 border-none hover:from-purple-700 hover:to-blue-600"
+        >
           {type === "add" ? "Add" : "Update"}
         </Button>
       </div>
