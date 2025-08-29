@@ -6,10 +6,10 @@ import SideBar from "./sidebar";
 function UserInfo({ loggedInUserData }: { loggedInUserData: UserType }) {
   const [showsSideBar, setShowsSideBar] = React.useState(false);
   return (
-    <div className="p-5 border-0 border-l border-solid flex items-center gap-5">
-      <span className="text-gray-500 text-sm">{loggedInUserData.name}</span>
+    <div className="p-5 border-0 border-l border-solid border-gray-700 flex items-center gap-5">
+      <span className="text-gray-300 text-sm">{loggedInUserData.name}</span>
       <User
-        className="text-gray-500"
+        className="text-gray-300 cursor-pointer hover:text-purple-500 transition-all duration-300"
         onClick={() => setShowsSideBar(!showsSideBar)}
       />
 

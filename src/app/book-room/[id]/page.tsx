@@ -13,19 +13,18 @@ async function BookRoomPage({
   };
 }) {
   const response = await RoomModel.findById(params.id)
-    //bug happens
     .populate({ path: "villa", model: mongoose.model("villas") });
   const room: RoomType = JSON.parse(JSON.stringify(response));
   return (
     <div>
       <div>
-        <h1 className="font-bold text-gray-500 text-2xl">
+        <h1 className="font-bold text-gray-300 text-2xl">
           {room.name} - {room.villa.name}
         </h1>
-        <span className="text-gray-500 text-sm">{room.villa.address}</span>
+        <span className="text-gray-400 text-sm">{room.villa.address}</span>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 mt-10">
+      <div className="grid grid-cols-1 lg:grid-cols-3 mt-10 gap-7">
         <div className="col-span-2">
           <RoomInfo room={room} />
         </div>

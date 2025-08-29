@@ -1,16 +1,17 @@
 "use client";
 import { Table, message } from "antd";
 import dayjs from "dayjs";
-import { Delete, Edit, PlusSquare, Trash2 } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { RoomType } from "<pages>/interfaces";
 import { DeleteRoom } from "<pages>/server-actions/rooms";
-import { render } from "react-dom";
 
 function RoomsTable({ rooms }: { rooms: RoomType[] }) {
   const router = useRouter();
-  const [loading = false, setLoading] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [showConfirm, setShowConfirm] = React.useState(false);
+  const [selectedRoomId, setSelectedRoomId] = React.useState<string | null>(null);
 
   const onDelete = async (roomId: string) => {
     try {
@@ -18,14 +19,15 @@ function RoomsTable({ rooms }: { rooms: RoomType[] }) {
       const response = await DeleteRoom(roomId);
       if (response.success) {
         message.success(response.message);
-      }
-      if (!response.success) {
+      } else {
         message.error(response.error);
       }
     } catch (error: any) {
       message.error(error.message);
     } finally {
       setLoading(false);
+      setShowConfirm(false);
+      setSelectedRoomId(null);
     }
   };
 
@@ -71,7 +73,10 @@ function RoomsTable({ rooms }: { rooms: RoomType[] }) {
           <Trash2
             size={18}
             className="cursor-pointer text-red-700"
-            onClick={() => onDelete(record._id)}
+            onClick={() => {
+              setSelectedRoomId(record._id);
+              setShowConfirm(true);
+            }}
           />
           <Edit
             size={18}
@@ -82,9 +87,40 @@ function RoomsTable({ rooms }: { rooms: RoomType[] }) {
       ),
     },
   ];
+
   return (
     <div>
-      <Table loading={loading} dataSource={rooms} columns={columns} />
+      <Table loading={loading} dataSource={rooms} columns={columns} rowKey="_id" />
+
+      {/* Custom Confirmation Popup */}
+      {showConfirm && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-gray-800 rounded-2xl shadow-lg p-6 w-[90%] md:w-[400px]">
+            <h2 className="text-lg font-semibold text-gray-200 mb-2">
+              Are you sure you want to delete this room?
+            </h2>
+            <p className="text-sm text-gray-400 mb-6">
+              This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-4">
+              {/* Cancel Button - Purple Gradient */}
+              <button
+                onClick={() => setShowConfirm(false)}
+                className="px-4 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-blue-500 text-white hover:from-purple-700 hover:to-blue-600 transition"
+              >
+                Cancel
+              </button>
+              {/* Delete Button - Red */}
+              <button
+                onClick={() => selectedRoomId && onDelete(selectedRoomId)}
+                className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-500"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

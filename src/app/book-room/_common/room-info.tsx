@@ -5,8 +5,8 @@ import React from "react";
 function RoomInfo({ room }: { room: RoomType }) {
   const renderRoomProperty = (label: string, value: string) => {
     return (
-      <div className="flex flex-col  text-gray-600">
-        <span className="text-xs">{label}</span>
+      <div className="flex flex-col text-gray-300">
+        <span className="text-xs text-gray-400">{label}</span>
         <span className="text-sm font-semibold"> {value}</span>
       </div>
     );
@@ -21,7 +21,7 @@ function RoomInfo({ room }: { room: RoomType }) {
             key={index}
             width={200}
             height={170}
-            className="rounded-lg"
+            className="rounded-lg border border-gray-600"
           />
         ))}
       </div>
@@ -38,12 +38,12 @@ function RoomInfo({ room }: { room: RoomType }) {
       </div>
 
       <div className="mt-7">
-      <span className="text-xs">Amenities</span>
+        <span className="text-xs text-gray-400">Amenities</span>
         <div className="flex flex-wrap gap-7 mt-2">
           {room.amenities.split(",").map((amenity, index) => (
             <div
               key={index}
-              className="bg-gray-200 text-gray-600 rounded-md px-3 py-1 text-xs capitalize"
+              className="bg-purple-900/30 text-purple-300 rounded-md px-3 py-1 text-xs capitalize border border-purple-700"
             >
               {amenity}
             </div>

@@ -8,7 +8,9 @@ function ProjectTitle() {
       className="p-5 text-2xl font-bold cursor-pointer"
       onClick={() => router.push("/")}
     >
-      <span color="from-gray-500 to-gray-500">First Light Villas</span>
+      <span className="bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
+        First Light Villas
+      </span>
     </div>
   );
 }
