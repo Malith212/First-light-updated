@@ -6,11 +6,10 @@ import ReportsInsights from "./ReportsInsights";
 import CustomerInsights from "./CustomerInsights";
 import BookingInsights from "./BookingInsights";
 import TimeBasedReports from "./TimeBasedReports";
-import OperationalReports from "./OperationalReports";
 
 async function ReportsData({ searchParams }: { searchParams: any }) {
+  // ✅ Fetch all bookings (Booked + Cancelled)
   const response = await BookingModel.find({
-    bookingStatus: "Booked",
     createdAt: {
       $gte: dayjs(searchParams.startDate).startOf("day").toDate(),
       $lte: dayjs(searchParams.endDate).endOf("day").toDate(),
@@ -22,57 +21,61 @@ async function ReportsData({ searchParams }: { searchParams: any }) {
     .sort({ createdAt: -1 });
 
   const bookings = JSON.parse(JSON.stringify(response));
-  const totalBookings = bookings.length;
-  const totalRevenue = bookings.reduce(
-    (acc: number, booking: any) => acc + booking.totalAmount,
-    0
-  );
+
+  // ✅ Separate booked bookings only
+  const bookedBookings = bookings.filter((b: any) => b.bookingStatus === "Booked");
+
+  // ✅ Revenue only from booked bookings
+  const totalRevenue = bookedBookings.reduce((acc: number, b: any) => acc + b.totalAmount, 0);
+
+  // ✅ Average revenue per booking (only booked)
+  const averageRevenue =
+    bookedBookings.length > 0 ? totalRevenue / bookedBookings.length : 0;
 
   return (
     <div>
-      {/* Summary Cards */}
-      <div className="md:flex-row flex-col flex gap-10">
+      {/* --- Summary Cards --- */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+        {/* Total Revenue */}
         <div
-          className="border py-7 px-10 flex flex-col border-solid gap-5"
-          style={{
-            border: "1px solid #40679E",
-          }}
+          className="border py-5 px-6 flex flex-col border-solid gap-3 bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg shadow-lg"
+          style={{ border: "1px solid #3b82f6" }}
         >
-          <h1 className="text-xl font-bold text-gray-600">Total Bookings</h1>
+          <h1 className="text-lg font-bold text-gray-300 text-center">
+            Total Revenue
+          </h1>
           <h1
-            className="text-5xl font-bold text-center"
-            style={{ color: "#40679E" }}
+            className="text-3xl font-bold text-center"
+            style={{ color: "#3b82f6" }}
           >
-            {totalBookings}
+            LKR {totalRevenue.toLocaleString()}
           </h1>
         </div>
 
+        {/* Average Revenue */}
         <div
-          className="border py-7 px-10 flex flex-col border-solid gap-5"
-          style={{
-            border: "1px solid #944E63",
-          }}
+          className="border py-5 px-6 flex flex-col border-solid gap-3 bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg shadow-lg"
+          style={{ border: "1px solid #f59e0b" }}
         >
-          <h1 className="text-xl font-bold text-gray-600">Total Revenue</h1>
-          <h1
-            className="text-5xl font-bold text-center"
-            style={{ color: "#944E63" }}
-          >
-            LKR {totalRevenue}
+          <h1 className="text-lg font-bold text-gray-300 text-center">
+            Avg Revenue
           </h1>
+          <h1
+            className="text-3xl font-bold text-center"
+            style={{ color: "#f59e0b" }}
+          >
+            LKR {averageRevenue.toLocaleString()}
+          </h1>
+          <p className="text-yellow-400 text-sm text-center">per booking</p>
         </div>
       </div>
 
-      {/* Insights Section (Room + Villa Reports) */}
-      <ReportsInsights bookings={bookings} />
-
-      {/* Detailed Bookings Table */}
-      <AdminBookingsTable bookings={bookings} />
-
-      <CustomerInsights bookings={bookings} />
-      <BookingInsights bookings={bookings} />
-      <TimeBasedReports bookings={bookings} />
-      <OperationalReports bookings={bookings} />
+      {/* --- Reports --- */}
+      <ReportsInsights bookings={bookedBookings} /> {/* ✅ Only booked data */}
+      <AdminBookingsTable bookings={bookings} hideReceipt={true} />
+      <CustomerInsights bookings={bookedBookings} /> {/* ✅ Only booked data */}
+      <BookingInsights bookings={bookings} /> {/* ✅ Uses both booked & cancelled */}
+      <TimeBasedReports bookings={bookedBookings} /> {/* ✅ Only booked data */}
     </div>
   );
 }
