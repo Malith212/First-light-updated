@@ -57,67 +57,83 @@ function VillaForm({
       onFinish={onFinish}
       initialValues={initialData}
     >
+      {/* Villa Name */}
       <Form.Item
         className="col-span-3"
         label={<span className="text-gray-300 font-medium">Villa Name</span>}
         name="name"
         rules={[{ required: true, message: "Villa Name is required" }]}
       >
-        <Input 
-          placeholder="Villa Name" 
+        <Input
+          placeholder="Villa Name"
           className="placeholder-gray-400"
         />
       </Form.Item>
 
+      {/* Branch Manager Name */}
       <Form.Item
         className="col-span-3 md:col-span-1"
         label={<span className="text-gray-300 font-medium">Branch Manager Name</span>}
         name="owner"
         rules={[{ required: true, message: "Branch Manager Name is required" }]}
       >
-        <Input 
-          placeholder="Branch Manager Name" 
+        <Input
+          placeholder="Branch Manager Name"
           className="placeholder-gray-400"
         />
       </Form.Item>
 
+      {/* Email Validation */}
       <Form.Item
         className="col-span-3 md:col-span-1"
         label={<span className="text-gray-300 font-medium">Email</span>}
         name="email"
-        rules={[{ required: true, message: "Email is required" }]}
+        rules={[
+          { required: true, message: "Email is required" },
+          { type: "email", message: "Please enter a valid email address" },
+        ]}
       >
-        <Input 
-          placeholder="Email" 
+        <Input
+          placeholder="Email"
           className="placeholder-gray-400"
         />
       </Form.Item>
 
+      {/* Phone Validation */}
       <Form.Item
         className="col-span-3 md:col-span-1"
         label={<span className="text-gray-300 font-medium">Phone</span>}
         name="phone"
-        rules={[{ required: true, message: "Phone No is required" }]}
+        rules={[
+          { required: true, message: "Phone number is required" },
+          {
+            pattern: /^[0-9]{10}$/,
+            message: "Phone number must contain exactly 10 digits",
+          },
+        ]}
       >
-        <Input 
-          placeholder="Phone" 
+        <Input
+          placeholder="Phone"
           className="placeholder-gray-400"
+          maxLength={10}
         />
       </Form.Item>
 
+      {/* Address */}
       <Form.Item
         className="col-span-3"
         label={<span className="text-gray-300 font-medium">Address</span>}
         name="address"
         rules={[{ required: true, message: "Address is required" }]}
       >
-        <Input.TextArea 
-          placeholder="Address" 
+        <Input.TextArea
+          placeholder="Address"
           rows={4}
           className="placeholder-gray-400"
         />
       </Form.Item>
 
+      {/* Media Upload */}
       <div className="col-span-3">
         <label className="text-gray-300 font-medium block mb-3">Media</label>
         <div className="flex flex-wrap gap-4 mb-4">
@@ -155,19 +171,18 @@ function VillaForm({
         </Upload>
       </div>
 
+      {/* Buttons */}
       <div className="col-span-3 flex justify-end gap-5">
-        <Button 
-          disabled={loading} 
+        <Button
+          disabled={loading}
           onClick={() => router.push("/admin/villas")}
-          // className="border-gray-600 text-gray-300 hover:bg-gray-700"
         >
           Cancel
         </Button>
-        <Button 
-          type="primary" 
-          htmlType="submit" 
+        <Button
+          type="primary"
+          htmlType="submit"
           loading={loading}
-          // className="bg-gradient-to-r from-purple-600 to-blue-500 border-none hover:from-purple-700 hover:to-blue-600"
         >
           {type === "add" ? "Add" : "Update"}
         </Button>
