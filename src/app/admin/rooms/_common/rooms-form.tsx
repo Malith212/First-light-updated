@@ -60,15 +60,13 @@ function RoomsForm({
       onFinish={onFinish}
       initialValues={initialData}
     >
+      {/* Villa */}
       <Form.Item
         label={<span className="text-gray-300">Villa</span>}
         name="villa"
         rules={[{ required: true, message: "Please select a Villa" }]}
       >
-        <Select
-          placeholder="Select a Villa"
-          className="placeholder-gray-100"
-        >
+        <Select placeholder="Select a Villa" className="placeholder-gray-100">
           {villas.map((villa) => (
             <Select.Option key={villa._id} value={villa._id}>
               {villa.name}
@@ -77,15 +75,13 @@ function RoomsForm({
         </Select>
       </Form.Item>
 
+      {/* Room View */}
       <Form.Item
         label={<span className="text-gray-300">Room View</span>}
         name="name"
         rules={[{ required: true, message: "Room View is Required" }]}
       >
-        <Select
-          placeholder="Select Room View"
-          className="placeholder-gray-400"
-        >
+        <Select placeholder="Select Room View" className="placeholder-gray-400">
           <Select.Option value="ocean-vista">Ocean Vista</Select.Option>
           <Select.Option value="mountain-panorama">Mountain Panorama</Select.Option>
           <Select.Option value="pool-view">Pool View</Select.Option>
@@ -94,17 +90,23 @@ function RoomsForm({
         </Select>
       </Form.Item>
 
+      {/* Room Number (Number Validation) */}
       <Form.Item
         label={<span className="text-gray-300">Room Number</span>}
         name="roomNumber"
-        rules={[{ required: true, message: "Room Number is Required" }]}
+        rules={[
+          { required: true, message: "Room Number is Required" },
+          { pattern: /^[0-9]+$/, message: "Room Number must be a number" },
+        ]}
       >
         <Input
           placeholder="Enter Room Number"
           className="placeholder-gray-400"
+          maxLength={5}
         />
       </Form.Item>
 
+      {/* Type */}
       <Form.Item
         label={<span className="text-gray-300">Type</span>}
         name="type"
@@ -123,21 +125,30 @@ function RoomsForm({
         </Select>
       </Form.Item>
 
+      {/* Beds (Number Validation) */}
       <Form.Item
         label={<span className="text-gray-300">Beds</span>}
         name="beds"
-        rules={[{ required: true, message: "Beds Number is Required" }]}
+        rules={[
+          { required: true, message: "Beds Number is Required" },
+          { pattern: /^[0-9]+$/, message: "Beds must be a number" },
+        ]}
       >
         <Input
           placeholder="Enter Number of Beds"
           className="placeholder-gray-400"
+          maxLength={2}
         />
       </Form.Item>
 
+      {/* Rent Per Day (Number Validation) */}
       <Form.Item
         label={<span className="text-gray-300">Rent Per Day</span>}
         name="rentPerDay"
-        rules={[{ required: true, message: "Rent Per Day is Required" }]}
+        rules={[
+          { required: true, message: "Rent Per Day is Required" },
+          { pattern: /^[0-9]+$/, message: "Rent Per Day must be a number" },
+        ]}
       >
         <Input
           placeholder="Enter Rent Per Day"
@@ -145,6 +156,7 @@ function RoomsForm({
         />
       </Form.Item>
 
+      {/* Amenities */}
       <Form.Item
         label={<span className="text-gray-300">Amenities</span>}
         name="amenities"
@@ -157,6 +169,7 @@ function RoomsForm({
         />
       </Form.Item>
 
+      {/* Media Upload */}
       <div className="col-span-3 flex gap-5">
         <div className="flex gap-5">
           {existingMedia.map((media: any, index: number) => (
@@ -193,20 +206,15 @@ function RoomsForm({
         </Upload>
       </div>
 
+      {/* Buttons */}
       <div className="col-span-3 flex justify-end gap-5">
         <Button
           disabled={loading}
           onClick={() => router.push("/admin/rooms")}
-          // className="border-gray-600 text-gray-300 hover:bg-gray-700"
         >
           Cancel
         </Button>
-        <Button
-          type="primary"
-          htmlType="submit"
-          loading={loading}
-          // className="bg-gradient-to-r from-purple-600 to-blue-500 border-none hover:from-purple-700 hover:to-blue-600"
-        >
+        <Button type="primary" htmlType="submit" loading={loading}>
           {type === "add" ? "Add" : "Update"}
         </Button>
       </div>
